@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<title></title>
+</head>
+<body>
+
+<h1>Form Siswa</h1>
+
+<div class="container">
+	<div class="row">
+		<div class="col-10 offset-1">
+			
+
+			<form action="javascript:void(0);" method="POST" onsubmit="app.Add()">
+				<input type="text" id="addName" placeholder="Nama" />
+				<input type="text" id="addKelas" placeholder="Kelas" />
+				<input type="submit" value="Add" />
+			</form>
+
+			<div id="formEdit" role="arla-hidden">
+				<form action="javascript:void(0);" method="POST" id="saveEdit">
+					<input type="text" id="editName" />
+					<input type="text" id="editKelas" />
+					<input type="submit" value="Edit" />
+					<a onclick="CloseInput()" arla-label="Close">x</a>
+				</form>
+			</div>
+
+
+				<p id="hitung"></p>
+
+				<table class="table table-borderless">
+  					<thead>
+    					<tr>
+							<th>Name</th>
+							<th>Kelas</th>
+							<th>Action</th>
+    					</tr>
+  					</thead>
+  					<tbody id="name"></tbody>
+					<tbody id="kelas"></tbody>
+				</table>
+		</div>
+	</div>
+</div>
+
+<!-- Script -->
+<script>
+	var app = new (function(data){
+		this.getName = document.getElementById("name");
+		this.getKelas = document.getElementById("kelas");
+		this.Name = [];
+		this.Kelas = [];
+
+		this.Hitung = function(data){
+			var use = document.getElementById("hitung");
+			var name = "Siswa";
+
+			if (data) {
+				use.innerHTML = data + " " + name;
+			} else {
+				use.innerHTML = "Tidak Ada " + name;
+			}
+
+		};
+
+		this.ShowData = function() {
+			var data1 = " ";
+
+			if(this.Name.length > 0 ){
+				for (i = 0; i < this.Name. length; i++){
+					data1 +="<tr>";
+					data1 += "<td>" + this.Name[i] + "</td>";
+					data1 += "<td>" + this.Kelas[i] + "</td>";
+					data1+=
+						'<td> <button class="btn btn-info" onclick="app.Edit (' + i + ')"> Edit </button> <button class="btn btn-danger" onclick="app.Delete (' + i + ')"> Delete </button></td>';
+
+						data1 += "</tr>";
+
+				}
+			}
+
+			this.Hitung(this.Name.length);
+			return (this.getName.innerHTML = data1);
+			return (this.getKelas.innerHTML = data1);
+		};
+
+		this.Add = function(){
+			var getIdAddName = document.getElementById("addName")
+			var getIdAddKelas = document.getElementById("addKelas")
+			var add = getIdAddName.value;
+			var add1 = getIdAddKelas.value;
+
+			if (getIdAddName) {
+				this.Name.push(add.trim());
+				this.Kelas.push(add1.trim());
+
+				getIdAddName.value = " ";
+				getIdAddKelas.value = " ";
+				this.ShowData();
+			}
+		};
+
+		this.Edit = function(item){
+			var edit = document.getElementById("editName") // mengambil data dari data yang sudah ada
+			var edit1 = document.getElementById("editKelas")
+			edit.value = this.Name[item];
+			edit1.value = this.Kelas[item];
+			document.getElementById("formEdit").style.display = "block" ;
+
+
+			a = this;
+			document.getElementById("saveEdit").onsubmit = function(){
+				var newName = edit.value;
+				var newKelas = edit1.value;
+				if (newName) {
+					a.Name.splice(item, 1, newName.trim());
+					a.Kelas.splice(item, 1, newKelas.trim());
+					a.ShowData();
+					CloseInput();
+				}
+			};
+		};
+
+		this.Delete= function(item){
+			this.Name.splice(item, 1 );
+
+			this.ShowData();
+		};
+
+	})();
+
+		function CloseInput(){
+			document.getElementById("formEdit").style.display = "none";		
+		}
+</script>
+
+</body>
+</html>
